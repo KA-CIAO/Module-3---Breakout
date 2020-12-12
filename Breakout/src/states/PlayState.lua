@@ -1,16 +1,21 @@
 PlayState = Class{__includes = BaseState}
 
 function PlayState:enter(params)
-    self.paddle = Paddle()
-    self.ball = Ball(1)
+    self.paddle = params.paddle
+    self.bricks = params.bricks
+    self.health = params.health
+    self.score = params.score
+    self.highScores = params.highScores
+    self.ball = params.ball
+    self.level = params.level
+    
+    self.recoverPoints = 5000
     
     self.ball.dx = math.random(-200, 200)
     self.ball.dy = math.random(-50, -60)
     
     self.ball.x = VIRTUAL_WIDTH / 2 - 4
     self.ball.y = VIRTUAL_HEIGHT - 42
-
-    self.bricks = LevelMaker.createMap()
 end
 
 function PlayState:update(dt)
@@ -46,7 +51,28 @@ function PlayState:update(dt)
     
     for k, brick in pairs(self.bricks) do
         if brick.inPlay and self.ball:collides(brick) then
+            self.score = self.score + (brick.tier * 200 + brick.color * 25)
             brick:hit()
+            
+            if self.score > self.recoverPoints then
+                self.health = math.min(3, self.health + 1)
+                self.recoverPoints = math.min(100000, self.recoverPoints * 2)
+                gSounds['recover']:play()
+            end
+
+            if self:checkVictory() then
+                gSounds['victory']:play()
+
+                gStateMachine:change('victory', {
+                    level = self.level,
+                    paddle = self.paddle,
+                    health = self.health,
+                    score = self.score,
+                    highScores = self.highScores,
+                    ball = self.ball,
+                    recoverPoints = self.recoverPoints
+                })
+            end
             
             if self.ball.x + 2 < brick.x and self.ball.dx > 0 then
                 self.ball.dx = -self.ball.dx
@@ -65,12 +91,40 @@ function PlayState:update(dt)
                 self.ball.y = brick.y + 16
             end
             
-            self.ball.dy = self.ball.dy * 1.02
+            if math.abs(self.ball.dy) < 150 then
+                self.ball.dy = self.ball.dy * 1.02
+            end
             
             break
         end
     end
-        
+    
+    if self.ball.y >= VIRTUAL_HEIGHT then
+        self.health = self.health - 1
+        gSounds['hurt']:play()
+
+        if self.health == 0 then
+            gStateMachine:change('game-over', {
+                score = self.score,
+                highScores = self.highScores
+            })
+        else
+            gStateMachine:change('serve', {
+                paddle = self.paddle,
+                bricks = self.bricks,
+                health = self.health,
+                score = self.score,
+                highScores = self.highScores,
+                level = self.level,
+                recoverPoints = self.recoverPoints
+            })
+        end
+    end
+    
+   for k, brick in pairs(self.bricks) do
+        brick:update(dt)
+    end
+    
     if love.keyboard.wasPressed('escape') then
         love.event.quit()
     end
@@ -85,8 +139,21 @@ function PlayState:render()
     self.paddle:render()
     self.ball:render()
 
+    renderScore(self.score)
+    renderHealth(self.health)
+    
     if self.paused then
         love.graphics.setFont(gFonts['large'])
         love.graphics.printf("PAUSED", 0, VIRTUAL_HEIGHT / 2 - 16, VIRTUAL_WIDTH, 'center')
     end
+end
+
+function PlayState:checkVictory()
+    for k, brick in pairs(self.bricks) do
+        if brick.inPlay then
+            return false
+        end 
+    end
+
+    return true
 end
