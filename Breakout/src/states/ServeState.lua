@@ -16,8 +16,8 @@ end
 
 function ServeState:update(dt)
     self.paddle:update(dt)
-    self.ball.x = self.paddle.x + (self.paddle.width / 2) - 4
-    self.ball.y = self.paddle.y - 8
+    self.ball[1].x = self.paddle.x + (self.paddle.width / 2) - 4
+    self.ball[1].y = self.paddle.y - 8
 
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
         gStateMachine:change('play', {
@@ -43,7 +43,7 @@ function ServeState:render()
     self.paddle:render()
     
     for k, bol in pairs(self.ball) do
-      bol:render()
+        bol:render()
     end
 
     for k, brick in pairs(self.bricks) do
