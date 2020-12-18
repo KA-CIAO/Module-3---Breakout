@@ -69,6 +69,11 @@ function LevelMaker.createMap(level)
                 b.tier = solidTier
             end 
             
+            if math.random(4) == 2 then
+                b.isLocked = true
+            
+            end
+                
             table.insert(bricks, b)
             ::continue::
         end
