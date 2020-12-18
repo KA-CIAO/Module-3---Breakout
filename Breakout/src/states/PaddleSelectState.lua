@@ -29,13 +29,15 @@ function PaddleSelectState:update(dt)
         gSounds['confirm']:play()
 
         gStateMachine:change('serve', {
-            paddle = Paddle(self.currentPaddle),
-            bricks = LevelMaker.createMap(32),
+            paddle = Paddle(self.currentPaddle,2),
+            bricks = LevelMaker.createMap(1),
             health = 3,
             score = 0,
             highScores = self.highScores,
-            level = 32,
+            level = 1,
             recoverPoints = 5000
+            paddlePoints = 7000,
+            keys = 3 
         })
     end
 
@@ -53,7 +55,7 @@ function PaddleSelectState:render()
         VIRTUAL_WIDTH, 'center')
         
     if self.currentPaddle == 1 then
-        love.graphics.setColor(40, 40, 40, 128)
+        love.graphics.setColor(40/255, 40/255, 40/255, 128/255)
     end
     
     love.graphics.draw(gTextures['arrows'], gFrames['arrows'][1], VIRTUAL_WIDTH / 4 - 24,
@@ -62,7 +64,7 @@ function PaddleSelectState:render()
     love.graphics.setColor(255, 255, 255, 255)
 
     if self.currentPaddle == 4 then
-        love.graphics.setColor(40, 40, 40, 128)
+        love.graphics.setColor(40/255, 40/255, 40/255, 128/255)
     end
     
     love.graphics.draw(gTextures['arrows'], gFrames['arrows'][2], VIRTUAL_WIDTH - VIRTUAL_WIDTH / 4,
