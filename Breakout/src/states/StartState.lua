@@ -39,7 +39,7 @@ function StartState:render()
     love.graphics.setFont(gFonts['medium'])
 
     if highlighted == 1 then
-        love.graphics.setColor(103, 255, 255, 255)
+        love.graphics.setColor(103/255, 1, 1, 1)
     end
     love.graphics.printf("START", 0, VIRTUAL_HEIGHT / 2 + 70,
         VIRTUAL_WIDTH, 'center')
@@ -47,7 +47,7 @@ function StartState:render()
     love.graphics.setColor(255, 255, 255, 255)
 
     if highlighted == 2 then
-        love.graphics.setColor(103, 255, 255, 255)
+        love.graphics.setColor(103/255, 255/255, 255/255, 255/255)
     end
     love.graphics.printf("HIGH SCORES", 0, VIRTUAL_HEIGHT / 2 + 90,
         VIRTUAL_WIDTH, 'center')
