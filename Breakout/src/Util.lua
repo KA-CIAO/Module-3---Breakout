@@ -28,7 +28,10 @@ function table.slice(tbl, first, last, step)
 end
 
 function GenerateQuadsBricks(atlas)
-    return table.slice(GenerateQuads(atlas, 32, 16), 1, 21)
+    brickTable = {}
+    brickTable = table.slice(GenerateQuads(atlas, 32, 16), 1, 21)
+    table.insert(brickTable,GenerateQuads(atlas, 32, 16)[24])
+    return brickTable
 end
 
 function GenerateQuadsPaddles(atlas)
@@ -82,6 +85,25 @@ function GenerateQuadsBalls(atlas)
         quads[counter] = love.graphics.newQuad(x, y, 8, 8, atlas:getDimensions())
         x = x + 8
         counter = counter + 1
+    end
+
+    return quads
+end
+
+function GenerateQuadsPowerups(atlas)
+    local x = 0         
+    local y = 16*12
+    
+    local counter = 1
+    local quads = {}
+
+    for i = 0, 9 do 
+        quads[counter] = love.graphics.newQuad(x + 16*i, y,
+         16, 16,
+        atlas:getDimensions()) 
+        
+        counter = counter + 1
+
     end
 
     return quads
