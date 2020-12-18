@@ -27,6 +27,7 @@ function love.load()
         ['paddles'] = GenerateQuadsPaddles(gTextures['main']),
         ['balls'] = GenerateQuadsBalls(gTextures['main']),
         ['bricks'] = GenerateQuadsBricks(gTextures['main'])
+        ['powerups'] = GenerateQuadsPowerups(gTextures['main']), 
         ['hearts'] = GenerateQuads(gTextures['hearts'], 10, 9)
     }
     
@@ -163,6 +164,12 @@ function renderHealth(health)
         love.graphics.draw(gTextures['hearts'], gFrames['hearts'][2], healthX, 4)
         healthX = healthX + 11
     end
+end
+
+function renderKeys(keys) 
+    love.graphics.draw(gTextures['main'], gFrames['powerups'][10], VIRTUAL_WIDTH - 40,  VIRTUAL_HEIGHT - 15, 0)
+    love.graphics.setFont(gFonts['small'])
+    love.graphics.print("X "..keys, VIRTUAL_WIDTH - 20, VIRTUAL_HEIGHT - 15)
 end
     
 function displayFPS()
